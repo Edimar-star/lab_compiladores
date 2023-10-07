@@ -1,0 +1,2 @@
+SELECT " FROM + MYTABLE;
+SELECT " 2+2 "juan";
