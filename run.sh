@@ -1,7 +1,7 @@
 #!/bin/bash
 
-sudo apt-get install flex
 flex -o LAB01.cpp LAB01.l
-g++ -o LAB01 LAB01.cpp -lfl
-./LAB01 entrada.txt > salida.txt
+yacc -d -o LAB02.cpp LAB02.y
+g++ -o LAB02 LAB01.cpp LAB02.cpp -lfl
+./LAB02 entrada.txt > salida.txt
 cat salida.txt

@@ -1,8 +1,7 @@
 CREATE Table Empleado(nombre VARCHAR(20), cedula INTEGER, salario
 DECIMAL(2)); 
-INSERT INTO Empleado VALUES("Juan",1045268154, 12aab);
+INSERT INTO Empleado VALUES('Juan',1045268154, 12aab);
 SELECT FROM a;
-SELECT COUNT() FROM tabla;
 SELECT nombre, MAX(salario) FROM Empleado;
-UPDATE SET nombre='Carlos' FROM Empleado WHERE cedula=12.5;
-SELECT * FROM Empleado WHERE salario<>2000000 ORDER BY nombre ASC . ;
+UPDATE SET nombre='Carlos' FROM Empleado WHERE cedula=12.5
+SELECT * FROM Empleado WHERE salario<2000000 ORDER BY nombre ASC .;

@@ -4,45 +4,15 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include "LAB02.hpp"
 
 using namespace std;
 
-extern FILE* yyin; // Declarar yyin como una variable externa
-
 map<string, string> mapa;
-int errores_lexicos = 0;
 %}
 
+%option case-insensitive
 %option noyywrap
-
-/* COMANDOS */
-TABLAS "CREATE TABLE"|"DROP TABLE"
-MANIP "INSERT"|"DELETE"|"UPDATE"
-BUSQ "SELECT"|"WHERE"|"GROUP BY"|"ORDER BY"
-FUNC "MAX"|"MIN"|"AVG"|"COUNT"
-KEYWORDS "INTO"|"VALUES"|"FROM"|"SET"|"ASC"|"DESC"
-DATO "ENTERO"|"DECIMAL"|"VARCHAR"
-COND "AND"|"OR"
-
-/* OPERADORES LOGICOS */
-ASIGN "="
-DIF "<>"
-MAYORIGQ ">="
-MENORIGQ "<="
-MAYORQ ">"
-MENORQ "<"
-
-/* OPERADORES ARITMETICOS */
-SUMA "+"
-RESTA "-"
-DIV "/"
-ASTER "*"
-
-/* SEPARADORES */
-PARENTABRE "("
-PARENTCIERRA ")"
-COMA ","
-PUNTCOMA ";"
 
 /* TOKENS */
 LETRA [A-Za-z]
@@ -50,96 +20,76 @@ LETRAS {LETRA}+
 DIGITO [0-9]
 ALFANUM {LETRA}|{DIGITO}
 IDENTIFICADOR {LETRA}{ALFANUM}*
-ENTERO {DIGITO}+
-DECIMAL {ENTERO}["."]{ENTERO}
+NUM_ENTERO {DIGITO}+
+NUM_DECIMAL {NUM_ENTERO}["."]{NUM_ENTERO}
 CADENA (\"[^\n"]*\")|(\'[^\n']*\')
 MAL_IDENTIFICADOR {DIGITO}({LETRA}|{DIGITO})*
 
 %%
 
-{ASIGN} { cout<<" asign="<<yytext; }
-{DIF} { cout<<" dif="<<yytext; }
-{MAYORIGQ} { cout<<" mayorigq="<<yytext; }
-{MENORIGQ} { cout<<" menorigq="<<yytext; }
-{MAYORQ} { cout<<" mayorq="<<yytext; }
-{MENORQ} { cout<<" menorq="<<yytext; }
+"CREATE TABLE" { cout<<"CREATE TABLE"; return (CREATE_TABLE); }
+"DROP TABLE" { cout<<"DROP TABLE"; return (DROP_TABLE); }
 
-{SUMA} { cout<<" suma="<<yytext; }
-{RESTA} { cout<<" resta="<<yytext; }
-{DIV} { cout<<" div="<<yytext; }
-{ASTER} { cout<<"aster="<<yytext; }
+"INSERT" { cout<<"INSERT"; return (INSERT); }
+"DELETE" { cout<<"DELETE"; return (DELETE); }
+"UPDATE" { cout<<"UPDATE"; return (UPDATE); }
 
-{PARENTABRE} { cout<<" parabre="<<yytext; }
-{PARENTCIERRA} { cout<<" parcierr="<<yytext; }
-{COMA} { cout<<" coma="<<yytext; }
-{PUNTCOMA} { cout<<" puntcoma="<<yytext; }
+"SELECT" { cout<<"SELECT"; return (SELECT); }
+"WHERE" { cout<<"WHERE"; return (WHERE); }
+"GROUP BY" { cout<<"GROUP BY"; return (GROUP_BY); }
+"ORDER BY" { cout<<"ORDER BY"; return (ORDER_BY); }
 
-{ENTERO} { cout<<" entero="<<yytext; }
-{DECIMAL} { cout<<" decimal="<<yytext; }
-{CADENA} { cout<<" cadena="<<yytext; }
+"MAX" { cout<<"MAX"; return (MAX); }
+"MIN" { cout<<"MIN"; return (MIN); }
+"AVG" { cout<<"AVG"; return (AVG); }
+"COUNT" { cout<<"COUNT"; return (COUNT); }
 
-{MAL_IDENTIFICADOR} {
-    errores_lexicos += 1;
-    cout<<"Error="<<yytext;
-}
-{IDENTIFICADOR} {
-    string cadena = yytext;
-    transform(cadena.begin(), cadena.end(), cadena.begin(), ::toupper);
-    bool banderas = cadena == "CREATE" || cadena == "DROP" || cadena == "TABLE" || cadena == "INSERT" || cadena == "DELETE" || 
-                    cadena == "UPDATE" || cadena == "SELECT" || cadena == "WHERE" || cadena == "GROUP" || cadena == "ORDER" || 
-                    cadena == "BY" || cadena == "MAX" || cadena == "MIN" || cadena == "AVG" || cadena == "COUNT" || 
-                    cadena == "INTO" || cadena == "VALUES" || cadena == "FROM" || cadena == "SET" || cadena == "ASC" || 
-                    cadena == "DESC" || cadena == "INTEGER" || cadena == "DECIMAL" || cadena == "VARCHAR" || cadena == "AND" || cadena == "OR";
-    
-    if (banderas) {
-        cout<<cadena;
-    } else {
-        if (mapa.find(yytext) == mapa.end()) {
-            mapa[yytext] = "id" + to_string(mapa.size() + 1);
-        }
-        cout<<" "<<mapa[yytext]<<"="<<yytext;
+"INTO" { cout<<"INTO"; return (INTO); }
+"VALUES" { cout<<"VALUES"; return (VALUES); }
+"FROM" { cout<<"FROM"; return (FROM); }
+"SET" { cout<<"SET"; return (SET); }
+"ASC" { cout<<"ASC"; return (ASC); }
+"DESC" { cout<<"DESC"; return (DESC); }
+
+"INTEGER" { cout<<"INTEGER"; return (INTEGER); }
+"DECIMAL" { cout<<"DECIMAL"; return (DECIMAL); }
+"VARCHAR" { cout<<"VARCHAR"; return (VARCHAR); }
+
+"AND" { cout<<"AND"; return (AND); }
+"OR" { cout<<"OR"; return (OR); }
+
+"==" { cout<<" equal="<<yytext; return (EQUAL); }
+"=" { cout<<" asign="<<yytext; return (ASIGN); }
+"<>" { cout<<" dif="<<yytext; return (DIF); }
+">=" { cout<<" mayorigq="<<yytext; return (MAYORIGQ); }
+"<=" { cout<<" menorigq="<<yytext; return (MENORIGQ); }
+">" { cout<<" mayorq="<<yytext; return (MAYORQ); }
+"<" { cout<<" menorq="<<yytext; return (MENORQ); }
+
+"+" { cout<<" sum="<<yytext; return (SUMA); }
+"-" { cout<<" rest="<<yytext; return (RESTA); }
+"/" { cout<<" div="<<yytext; return (DIV); }
+"*" { cout<<" aster="<<yytext; return (ASTER); }
+
+"(" { cout<<" parentabre="<<yytext; return (PARENTABRE); }
+")" { cout<<" parentcierr="<<yytext; return (PARENTCIERRA); }
+"," { cout<<" coma="<<yytext; return (COMA); }
+";" { cout<<" puntcoma="<<yytext; return (PUNTCOMA); }
+
+{NUM_ENTERO} { cout<<" entero="<<yytext; return (NUM_ENTERO); }
+{NUM_DECIMAL} { cout<<" decimal="<<yytext; return (NUM_DECIMAL); }
+{CADENA} { cout<<" cadena="<<yytext; return (CADENA); }
+
+{IDENTIFICADOR} { 
+    if (mapa.find(yytext) == mapa.end()) {
+        mapa[yytext] = "id" + to_string(mapa.size() + 1);
     }
+    cout<<" "<<mapa[yytext]<<"="<<yytext; 
+    return (IDENTIFICADOR); 
 }
 
 [ \t\n] { cout<<yytext; }
-. {
-    errores_lexicos += 1;
-    cout<<"Error="<<yytext;
-}
+{MAL_IDENTIFICADOR} { cout<<" Error="<<yytext; }
+. { cout<<" Error="<<yytext; return (OTHER); }
 
 %%
-
-int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        cerr<<"Uso: "<<argv[0]<<" archivo.txt\n";
-        return 1;
-    }
-
-    yyin = fopen(argv[1], "r");
-    if (yyin == NULL) {
-        cerr<<"No se pudo abrir el archivo "<<argv[1]<<endl;
-        return 1;
-    }
-
-    yylex();
-    fclose(yyin);
-
-    cout<<"\n\n"<<mapa.size()<<" Identificadores\n\n";
-
-    // Creamos un std::multimap para ordenar por valor
-    std::multimap<string, string> mapaOrdenadoPorValor;
-
-    // Invertimos los valores y claves en el std::multimap
-    for (const auto& par : mapa) {
-        mapaOrdenadoPorValor.insert({par.second, par.first});
-    }
-
-    // Imprimimos el mapa ordenado por valor
-    for (const auto& par : mapaOrdenadoPorValor) {
-        cout<<par.first<<"="<<par.second<<endl;
-    }
-
-    cout<<"\n"<<errores_lexicos<<" Errores léxicos\n";
-
-    return 0;
-}
