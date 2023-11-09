@@ -7,8 +7,6 @@
 #include "LAB02.hpp"
 
 using namespace std;
-
-map<string, string> mapa;
 %}
 
 %option case-insensitive
@@ -71,18 +69,19 @@ MAL_IDENTIFICADOR {DIGITO}({LETRA}|{DIGITO})*
 "/" { return (DIV); }
 "*" { return (ASTER); }
 
+"(" { return (PARENTABRE); }
+")" { return (PARENTCIERRA); }
+"," { return (COMA); }
+";" { return (PUNTCOMA); }
 
 {NUM_ENTERO} { return (NUM_ENTERO); }
 {NUM_DECIMAL} { return (NUM_DECIMAL); }
 {CADENA} { return (CADENA); }
 
-{IDENTIFICADOR} { 
-    if (mapa.find(yytext) == mapa.end()) {
-        mapa[yytext] = "id" + to_string(mapa.size() + 1);
-    }
-    return (IDENTIFICADOR); 
-}
+{IDENTIFICADOR} { return (IDENTIFICADOR); }
 
 [ \t\n] ;
 {MAL_IDENTIFICADOR} { return (MAL_IDENTIFICADOR); }
 . { return (OTHER); }
+
+%%
