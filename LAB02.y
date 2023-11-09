@@ -25,7 +25,7 @@ int numLinea = 1;
 %token INTO VALUES FROM SET ASC DESC
 %token INTEGER DECIMAL VARCHAR
 %token AND OR
-%token OTHER
+%token MAL_IDENTIFICADOR OTHER
 
 %%
 
@@ -91,13 +91,13 @@ int main(int argc, char* argv[]) {
     fclose(yyin);
 
     if (error_lineas.size() > 0) {
-        cout<<"\n\nIncorrecto\n\n";
+        cout<<"Incorrecto\n\n";
         for (int linea : error_lineas) {
             cout<<"Error en la linea "<<linea<<endl;
         }
         error_lineas.clear();
     } else {
-        cout<<"\n\nCorrecto\n";
+        cout<<"Correcto\n";
     }
 
     return 0;
